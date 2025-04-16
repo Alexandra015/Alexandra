@@ -10,17 +10,21 @@ import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 
+import abstractcomponents.AbstractComponent;
+
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class ProductCatalogue {
+public class ProductCatalogue extends AbstractComponent{
 
     WebDriver driver;
     WebDriverWait wait;
 
+    
+    //LOCATORS
     // Find all "Add to cart" buttons on the page
     @FindBy(xpath = "//button[contains(text(),'Add to cart')]")
     public List<WebElement> addToCartButtons;
@@ -37,6 +41,7 @@ public class ProductCatalogue {
     @FindBy(id = "add-to-cart-sauce-labs-backpack")
     WebElement  AddButton;
 
+    
     @FindBy(css = "[data-test='shopping-cart-badge']")
     WebElement shoppingCartBadge;
     //productTitle
@@ -76,32 +81,41 @@ public class ProductCatalogue {
     @FindBy(id="react-burger-cross-btn")
     WebElement Closebar;
     
-    /////
-    @FindBy(className = "cart_quantity")
-    private List<WebElement> cartQuantities;
-
-
     @FindBy(className = "cart_item") 
     private List<WebElement> cartItems;
-
-    @FindBy(id = "continue-shopping")
-    private WebElement continueShoppingButton;
-
-
+    
+   
+//
     @FindBy(id = "checkout")
     private WebElement checkoutButton;
     
-    @FindBy(className = "cart_list")
-    private WebElement cartList;
-    ///remove button in  cart page
-    @FindBy(className = "cart_button")
-    private List<WebElement> removeCartButton;
-
+    
 //Check Out Overview
     
     @FindBy(id="finish")
     private WebElement finishButton;
-    
+
+ /// Product details
+    @FindBy(id = "remove")
+    public  WebElement removebuttondetail;
+
+    @FindBy(id = "add-to-cart")
+    public WebElement addbuttondetail;
+
+    @FindBy(css = ".inventory_details_img")
+    private WebElement imgDetails;
+
+    @FindBy(css = ".inventory_details_name.large_size")
+    private WebElement ProdNameDetails;
+
+    @FindBy(css = ".inventory_details_desc.large_size")
+    private WebElement ProdDescDetails;
+
+    @FindBy(css = ".inventory_details_price")
+    private WebElement ProdPriceDetails;
+
+  
+  
 
     
     By item = By.cssSelector(".inventory_item_name");
@@ -111,27 +125,46 @@ public class ProductCatalogue {
   
 
     public ProductCatalogue(WebDriver driver) {
+    	super(driver);
         this.driver = driver;
         this.wait = new WebDriverWait(driver, Duration.ofSeconds(10));
         PageFactory.initElements(driver, this);
-    }
+    }//
     
+    
+    
+ // Uses stream to find a product by its name
     public WebElement VerifytheProductName(String productName) throws InterruptedException {
-        
+    	// Filters the list of products and returns the first one that matches the given name
         WebElement prod = getProductList().stream().filter(product->
         product.findElement(By.cssSelector(".inventory_item_name")).getText().equals(productName)).findFirst().orElse(null);
         
         return prod;
     }
+    
+
+ // Uses a loop to find a product by name
+    public WebElement verifyTheProductName(String productName) throws InterruptedException {
+        List<WebElement> products = getProductList();
+
+        for (WebElement product : products) {
+            WebElement nameElement = product.findElement(By.cssSelector(".inventory_item_name"));
+            if (nameElement.getText().equalsIgnoreCase(productName)) {
+                return product; // Return the product if the name matches
+            }
+        }
+
+        return null; // Not found
+    }
 
     // Add all items to the cart
-    
+ // Clicks a product to open its detail page
     public void VerifytheProductDetailPage(String productName) throws InterruptedException {
         WebElement prod = VerifytheProductName(productName);
-        prod.findElement(item).click();
+        prod.click();
         
     }
-    
+ // Adds a specific product to the cart by clicking its Add to Cart button
     public void addProductToCart(String productName) throws InterruptedException {
 		
 		WebElement prod = getProductByName(productName);
@@ -143,7 +176,11 @@ public class ProductCatalogue {
         return products; //gets the product
     }
     
-    //removebutton 
+    
+    
+    //removebutton   
+    
+   // Gets the text from the remove button if it is visible
     public String getRemoveButtonText() {
         // Wait until the 'Remove' button is visible or clickable
         if (removeButton.isDisplayed()) {
@@ -153,12 +190,9 @@ public class ProductCatalogue {
         }
     }
     
-
-   /* public void addToCart(String productName) {
-    	WebElement product = driver.findElement());
-    	product.click();
-    } */
     
+   
+    //// Finds a product WebElement using stream and returns it
     public WebElement getProductByName(String productName) throws InterruptedException {
 		
 		WebElement prod = getProductList().stream().filter(product->
@@ -166,7 +200,7 @@ public class ProductCatalogue {
 		
 	    return prod;
 	}
-    
+ // Clicks the Add to Cart button from product detail page
    public void VerifyaddtocartDet() throws InterruptedException {
        WebElement addToCartButton = driver.findElement(addTocart); 
        addToCartButton.click();
@@ -186,26 +220,31 @@ public class ProductCatalogue {
    //sortoption
        
    public void sortProductsByNameAtoZ() {
+	// Locate the sort dropdown and create a Select object
 	    Select dropdown = new Select(driver.findElement(By.className("product_sort_container")));
 	    dropdown.selectByVisibleText("Name (A to Z)");
 	}
 
 	public void sortProductsByNameZtoA() {
+		// Locate the sort dropdown and create a Select object
 	    Select dropdown = new Select(driver.findElement(By.className("product_sort_container")));
 	    dropdown.selectByVisibleText("Name (Z to A)");
 	}
 
 	public void sortProductsByPriceHighToLow() {
+		// Locate the sort dropdown and create a Select object
 	    Select dropdown = new Select(driver.findElement(By.className("product_sort_container")));
 	    dropdown.selectByVisibleText("Price (high to low)");
 	}
 	
 	
 	public void sortProductsByPriceLowToHigh() {
+		// Locate the sort dropdown and create a Select object
 	    Select dropdown = new Select(driver.findElement(By.className("product_sort_container")));
 	    dropdown.selectByVisibleText("Price (low to high)");
 	}
 	public boolean isProductsSortedByPriceLowToHigh() {
+		// Find all price elements on the page
 	    List<WebElement> priceElements = driver.findElements(By.className("inventory_item_price"));
 	    List<Double> prices = priceElements.stream()
 	        .map(e -> Double.parseDouble(e.getText().replace("$", "")))
@@ -267,6 +306,7 @@ public class ProductCatalogue {
        removebutton.click();
        
     }  
+    //*
     public void verifyHamburgerMenu() throws InterruptedException {
         // Click the hamburger menu button 
     	Thread.sleep(2000);
@@ -292,7 +332,7 @@ public class ProductCatalogue {
 		wait.until(ExpectedConditions.visibilityOf(findBy));
 	}
     
-    
+    //*/
     public Boolean VeirfyNavbarCheck() throws InterruptedException {
  	  return Menubar.isDisplayed();
     
@@ -307,13 +347,13 @@ public class ProductCatalogue {
 	    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
 	    wait.until(ExpectedConditions.invisibilityOfAllElements(elements));
 	}
-	
+	//*/
 	public List<WebElement> NavbarItemsCheck() {
 		waitWebElementListAppear(navbar);
 		   return navbar;
 	   
 	}
-	
+	//*/
 	public void OpenNavbar() throws InterruptedException {
 		Menubar.click();
 		Thread.sleep(1000);
@@ -323,14 +363,14 @@ public class ProductCatalogue {
 	public void CloseBar() throws InterruptedException {
 		Closebar.click();
 	}
-	
+	//*/
 	
 	public int getCartItemCount() {
         String itemCountText = shoppingCartBadge.getText();
         return Integer.parseInt(itemCountText);  // Convert the cart count to an integer
     }
-    
-    // Method to add all items to the cart
+    //*/
+    // Method to add all items to the cart //*/
     public void addAllItemsToCart() {
         for (WebElement addButton : addToCartButtons) {
             addButton.click();
@@ -340,7 +380,7 @@ public class ProductCatalogue {
         
         
    //product list features 
-        
+        //*/
       public void CheckAddtoCart()
       {
     	  //
@@ -360,11 +400,8 @@ public class ProductCatalogue {
         private void printDisplayStatus(String label, List<WebElement> elements) {
                 System.out.println(label + ": " + elements.get(0).isDisplayed());
             }
-        ////
-     /*   public void VerifyCartpage()
-        {
-      	  cartIcon.click();
-        }  */
+       
+     
         
 
         public CartPageObject VerifyCartpage() {
@@ -377,46 +414,7 @@ public class ProductCatalogue {
        
       }
         
-        
-        
-        // Verify required elements are displayed in the cart
-        public boolean isCartDetailsDisplayed() {
-            return cartQuantities.size() > 0 && products.size() > 0 
-                    && continueShoppingButton.isDisplayed() && checkoutButton.isDisplayed();
-        }
-
-        // Click 'Continue Shopping' button
-        public void clickContinueShopping() {
-            continueShoppingButton.click();
-        }
-
-        // Verify if the user is navigated back to the product page
-        public boolean isBackOnProductPage() {
-            return driver.getCurrentUrl().contains("inventory.html");
-        }
-
-        // Verify if an added product appears in the cart
-        public boolean isProductInCart(String productName) {
-            for (WebElement product : products) {
-                if (product.getText().equals(productName)) {
-                    return true;
-                }
-            }
-            return false;
-        }
-        
-
-        // Verify if multiple products are displayed in the cart
-        public boolean areMultipleProductsInCart() {
-        	
-            return cartItems.size() > 1;
-        }
-
-        // Verify product details in the cart
-        public boolean areProductDetailsCorrect() {
-            return cartQuantities.size() > 0 && products.size() > 0
-                    && productDesc.size() > 0 && productPrice.size() > 0;
-        }
+     
 
         // Remove an item from the cart and check if cart count updates
         public void removeItemFromCartPage() {
@@ -435,17 +433,16 @@ public class ProductCatalogue {
                 removeButtons.get(0).click();
             }
         }
-
+        ///8
         public boolean isCartEmpty() {
             return cartItems.isEmpty();
         }
 
-        public void addItemToCartMultipleTimes(String productName, int quantity) {
-            for (int i = 0; i < quantity; i++) {
+        public void addItemToCartMultipleTimes(String productName) {
                 WebElement addToCartButton = driver.findElement(By.id("add-to-cart-" + productName));
                 addToCartButton.click();
             }
-        }
+       
         
        //continue to checkout page
         public CheckOutPageObject goTocheckout() {
@@ -453,19 +450,74 @@ public class ProductCatalogue {
        		CheckOutPageObject checkout= new CheckOutPageObject (driver);
        		return checkout;
        	}  
-        //continue to  cartpage
+        //continue to  cart page
         public CartPageObject goToCartpage() {
         	cartIcon.click();
     		CartPageObject  cartpage= new CartPageObject (driver);
     		return cartpage;
     	}
      
-        //continue to  checkoupage
+        //continue to  checkoutOverview page
         public CheckOutOverviewObject goToCheckOutOverview() {
         	finishButton.click();
         	CheckOutOverviewObject  checkoutOverview= new CheckOutOverviewObject (driver);
     		return checkoutOverview;
     	}
+        
+      
+       ///Product Detail page
+       
+        public void clickOnProduct(int index) {
+            products.get(1).click();  // Click on a specific product by index
+        }
+        public void clickRemoveButtonDetailPage() {
+        	WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));   // 10 seconds timeout
+            wait.until(ExpectedConditions.elementToBeClickable(removebuttondetail));
+            removebuttondetail.click();
+        }
+
+        public void clickAddButtonDetailPage() {
+        	WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));  // 10 seconds timeout
+            wait.until(ExpectedConditions.elementToBeClickable(addbuttondetail));
+            addbuttondetail.click();
+        }
+        
+        //return the ProdNameDetails if its true
+        public boolean isProductNameDisplayed() {
+            return ProdNameDetails.isDisplayed();
+            
+        }
+        
+        public boolean isProductDecsDisplayed() {
+            return ProdDescDetails.isDisplayed();
+            
+        }
+        
+        public boolean isProductImgDisplayed() {
+            return imgDetails.isDisplayed();
+            
+        }
+        
+        public boolean isProductPriceDisplayed() {
+            return ProdPriceDetails.isDisplayed();
+            
+        }
+        
+        public boolean isRemoveButtonDisplayed() {
+            return removebuttondetail.isDisplayed();
+            
+            
+        }
+        public boolean isAddButtonDisplayed() {
+            return addbuttondetail.isDisplayed();
+        }
+        
+        
+        
+        
+        
+        
+        
 
          
 }

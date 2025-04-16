@@ -14,7 +14,9 @@ import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-public class CompleteOrderObject {
+import abstractcomponents.AbstractComponent;
+
+public class CompleteOrderObject extends AbstractComponent {
 
     WebDriver driver;
     WebDriverWait wait;
@@ -42,6 +44,7 @@ public class CompleteOrderObject {
 
     // Constructor
     public CompleteOrderObject(WebDriver driver) {
+    	super(driver);
         this.driver = driver;
         this.wait = new WebDriverWait(driver, Duration.ofSeconds(15)); // Increased timeout duration to 15 seconds
         PageFactory.initElements(driver, this);  // Initialize elements
@@ -97,18 +100,7 @@ public class CompleteOrderObject {
         }
         
 
-        
-      /*  public CheckOutOverviewObject goToCheckOutOverview() {
-        	finishButton.click();
-        	CheckOutOverviewObject  checkoutOverview= new CheckOutOverviewObject (driver);
-    		return checkoutOverview;
-    	}
-        
-        public CompleteOrderObject goToComplteOrder() {
-        	finishButton.click();
-        	CompleteOrderObject  completeorder= new CompleteOrderObject (driver);
-    		return completeorder;
-    	} */
+    
         
            
     }

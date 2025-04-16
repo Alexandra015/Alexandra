@@ -14,7 +14,9 @@ import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-public class CheckOutOverviewObject {
+import abstractcomponents.AbstractComponent;
+
+public class CheckOutOverviewObject  extends AbstractComponent{
 
     WebDriver driver;
     WebDriverWait wait;
@@ -56,6 +58,7 @@ public class CheckOutOverviewObject {
 
     // Constructor
     public CheckOutOverviewObject(WebDriver driver) {
+    	super(driver);
         this.driver = driver;
         this.wait = new WebDriverWait(driver, Duration.ofSeconds(15)); // Increased timeout duration to 15 seconds
         PageFactory.initElements(driver, this);  // Initialize elements

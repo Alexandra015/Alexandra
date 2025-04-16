@@ -5,23 +5,26 @@ import java.util.ArrayList;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 import org.testng.annotations.*;
 
+import BaseTest.BaseTest;
 import Excel.DataDriven;
 import PageObject.LandingPage;
 import PageObject.ProductCatalogue;
+import PageObject.ProductList;
 import io.github.bonigarcia.wdm.WebDriverManager;
 
-public class ProductDetailPageVerification {
+public class ProductDetailPageVerification extends BaseTest{
 
 	String productName = "Sauce Labs Backpack";
-    
-	private WebDriver driver;
+	
+	
     private DataDriven d;
     private String username;
     private String password;
-    private String lockedusername;
     private ArrayList<ArrayList<String>> userData;
     private LandingPage landingPage;
 
@@ -31,125 +34,60 @@ public class ProductDetailPageVerification {
         
         d = new DataDriven();
         userData = d.getData();
-        username = userData.get(0).get(0);
-        password = userData.get(0).get(1);
-        lockedusername = userData.get(1).get(0);
-    }
-
-    @BeforeMethod
-    public void setupTest() {
-        
-        ChromeOptions options = new ChromeOptions();
-        options.addArguments("--incognito");
-        driver = new ChromeDriver(options);
-        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(50));
-        driver.get("https://www.saucedemo.com/");
-        landingPage = new LandingPage(driver); // Initialize Page Object
-    }
-
-    @AfterMethod
-    public void tearDown() {
-        if (driver != null) {
-            driver.quit();
+        username = userData.get(0).get(0);  
+        password = userData.get(0).get(1); 
         }
-    }
+        
+ 
 
-
-  
     @Test
     public void AddToCartDetails() throws InterruptedException  {
+    	 LandingPage landingPage = new LandingPage(driver);
         //Verify if the 'Add to Cart' button is clickable and if the cart count updates.
         ProductCatalogue productCatalogue =landingPage.loginApplication(username, password);
-        productCatalogue.VerifytheProductDetailPage(productName);
+        productCatalogue.clickOnProduct(1);
+        Assert.assertTrue(productCatalogue.isProductNameDisplayed(), "Product name is not displayed.");
+        Assert.assertTrue(productCatalogue.isProductImgDisplayed(), "Product image is not displayed.");
+        Assert.assertTrue(productCatalogue.isProductDecsDisplayed(), "Product description is not displayed.");
+        Assert.assertTrue(productCatalogue.isProductPriceDisplayed(), "Product price is not displayed.");
+       // Assert.assertTrue(productCatalogue.isAddButtonDisplayed(), "Add to Cart button is not displayed.");
+
+        productCatalogue.clickAddButtonDetailPage();
+        // Wait for the Remove button to be visible after adding the product
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));  // Use Duration.ofSeconds() in Selenium 4
+        wait.until(ExpectedConditions.visibilityOf(productCatalogue.removebuttondetail));
+        Assert.assertTrue(productCatalogue.isRemoveButtonDisplayed(), "Remove button not displayed after adding.");
+
+        // Remove from Cart
+        productCatalogue.clickRemoveButtonDetailPage();
+        // Wait for the Add button to be visible again after removing the product
+        wait.until(ExpectedConditions.visibilityOf(productCatalogue.addbuttondetail));
+        Assert.assertTrue(productCatalogue.isAddButtonDisplayed(), "Add to Cart button not visible after removing.");
+    
+       // productCatalogue.VerifytheProductDetailPage(productName);
         productCatalogue.VerifyaddtocartDet();
         System.out.println( productCatalogue.VerifyCount());
+        
     }
-    
-
-
-    @Test
-    public void RemoveCartButton() throws InterruptedException  {
-        //Verify if the 'Add to Cart' button is clickable and if the cart count updates.
-        ProductCatalogue productCatalogue =landingPage.loginApplication(username, password);
-        productCatalogue.VerifytheProductDetailPage(productName);
-        productCatalogue.VerifyaddtocartDet();
-        productCatalogue.removeItemFromCart();
-        System.out.println(productCatalogue.VerifyCount());
-    }
-    
-
-    @Test
-    public void DisplayProduct() throws InterruptedException  {
-        //Verify if the 'Add to Cart' button is clickable and if the cart count updates.
-        ProductCatalogue productCatalogue =landingPage.loginApplication(username, password);
-        productCatalogue.VerifytheProductDetailPage(productName);
-        
-        
-       
-    }
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-  /*  public void verifyProductDetailPage() {
-        // Add all items to the cart
-        productCatalogue.addAllItemsToCart();
-        
-        // Dynamically calculate the expected cart count (based on the number of items on the page)
-        int expectedCount = productCatalogue.addToCartButtons.size(); 
-        
-        // Assert that the cart count matches the number of items added
-        Assert.assertTrue(productCatalogue.verifyCartItemCount(expectedCount), 
-            "Failed to update cart count to " + expectedCount + " on product details page.");
-    }
-
-    @Test
-    public void verifyCartCountMultipleItems() {
-        // Add all items to the cart
-        productCatalogue.addAllItemsToCart();
-        
-        // Get the expected count of items from the "Add to Cart" buttons available on the page
-        int expectedCount = productCatalogue.addToCartButtons.size();
-        
-        // Get the actual cart item count
-        int cartCount = productCatalogue.getCartItemCount();
-        
-        // Assert that the cart count matches the expected count
-        Assert.assertEquals(cartCount, expectedCount, "Cart count did not update correctly! Expected: " + expectedCount + " but found: " + cartCount);
-    }
-
-    @Test
-    public void verifyAddAndRemoveButtonsOnDetailPage() {
-        // Add all items to the cart
-        productCatalogue.addAllItemsToCart();
-        
-        // Calculate the expected count after removal (one item removed)
-        int expectedCountAfterRemove = productCatalogue.addToCartButtons.size() - 1;
-        
-        // Remove one item from the cart
-        productCatalogue.removeItemFromCart();
-        
-        // Get the updated cart count
-        int cartCount = productCatalogue.getCartItemCount();
-        
-        // Assert that the cart count is correct after removing one item
-        Assert.assertEquals(cartCount, expectedCountAfterRemove, 
-            "Cart count is incorrect after removing an item. Expected " + expectedCountAfterRemove + " but found " + cartCount);
-    }*/
 }
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+  

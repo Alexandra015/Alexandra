@@ -49,8 +49,11 @@ public class LandingPage extends AbstractComponent {
 		waitForWebElementToAppear(errorMessage);
 		 return errorMessage.getText();
 	}
+	
 	public void  goTo()
 	{
 		driver.get("https://www.saucedemo.com");
+		
+		
 	}
 }

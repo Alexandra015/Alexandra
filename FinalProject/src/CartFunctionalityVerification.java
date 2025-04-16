@@ -17,6 +17,7 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import BaseTest.BaseTest;
 import Excel.DataDriven;
 import PageObject.CartPageObject;
 import PageObject.LandingPage;
@@ -24,15 +25,13 @@ import PageObject.ProductCatalogue;
 import abstractcomponents.AbstractComponent;
 import io.github.bonigarcia.wdm.WebDriverManager;
 
-public class CartFunctionalityVerification  {
+public class CartFunctionalityVerification extends BaseTest {
 	    
 	    String productName = "Sauce Labs Backpack";
-	    
-		private WebDriver driver;
+	   
 	    private DataDriven d;
 	    private String username;
 	    private String password;
-	    private String lockedusername;
 	    private ArrayList<ArrayList<String>> userData;
 	    private LandingPage landingPage;
 	    private CartPageObject cartpageobject;
@@ -48,39 +47,12 @@ public class CartFunctionalityVerification  {
 	        userData = d.getData();
 	        username = userData.get(0).get(0);
 	        password = userData.get(0).get(1);
-	        lockedusername = userData.get(1).get(0);
 	    }
 	    
-	    
-
-	    @BeforeMethod
-	    public void setupTest() {
-	        
-	        ChromeOptions options = new ChromeOptions();
-	        options.addArguments("--incognito");
-	        driver = new ChromeDriver(options);
-	        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(50));
-	        driver.get("https://www.saucedemo.com/");
-	        landingPage = new LandingPage(driver); // Initialize Page Object
-	    }
-
-	    @AfterMethod
-	    public void tearDown() {
-	        if (driver != null) {
-	            driver.quit();
-	        }
-	    }
-	   /* @Test
-	    public void AddToCartDetails() throws InterruptedException  {
-	        //Verify if the 'Add to Cart' button is clickable and if the cart count updates.
-	        ProductCatalogue productCatalogue =landingPage.loginApplication(username, password);
-	        productCatalogue.VerifytheProductDetailPage(productName);
-	        productCatalogue.VerifyaddtocartDet();
-	        System.out.println( productCatalogue.VerifyCount());
-	    } */
-	    //addtocart 
+	  
 	    @Test
 	    public void Cart() throws InterruptedException  {
+	    	  LandingPage landingPage = new LandingPage(driver);
 	        //Verify if the 'Add to Cart' button is clickable and if the cart count updates.
 	        ProductCatalogue productCatalogue =landingPage.loginApplication(username, password);
 	        productCatalogue.verifyHamburgerMenu();
@@ -88,6 +60,7 @@ public class CartFunctionalityVerification  {
 	    //verifyif hamburger is visible
 	   @Test
 	    public void verifyHamburgerMenuAccess() throws InterruptedException {
+		   LandingPage landingPage = new LandingPage(driver);
 	    	ProductCatalogue productCatalogue =landingPage.loginApplication(username, password);
 	       System.out.println(productCatalogue.VeirfyNavbarCheck()); 
 	       productCatalogue.OpenNavbar();
@@ -99,6 +72,7 @@ public class CartFunctionalityVerification  {
 	   //multiple items add to cart 
 	  @Test
 	    public void verifyCartCountMultipleItems() throws InterruptedException {
+		  LandingPage landingPage = new LandingPage(driver);
 	        // Add all items to the cart
 		  ProductCatalogue productCatalogue =landingPage.loginApplication(username, password);
 	        productCatalogue.addAllItemsToCart();

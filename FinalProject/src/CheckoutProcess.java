@@ -14,6 +14,7 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import BaseTest.BaseTest;
 import Excel.DataDriven;
 import PageObject.CartPageObject;
 import PageObject.CheckOutPageObject;
@@ -22,24 +23,23 @@ import PageObject.ProductCatalogue;
 import PageObject.ProductList;
 import io.github.bonigarcia.wdm.WebDriverManager;
 
-public class CheckoutProcess {
+public class CheckoutProcess  extends BaseTest{
 
 	
 	String productName = "Sauce Labs Backpack";
-	ProductList productlist;
+	//ProductList productlist;
     
-	private WebDriver driver;
+	
     private DataDriven d;
     private String username;
     private String password;
-    private String lockedusername;
     private ArrayList<ArrayList<String>> userData;
     private LandingPage landingPage;
     private String LastName;
     private String FirstName;
     private String ZipCode;
 
-    @BeforeClass
+   @BeforeClass
     public void setUp() throws IOException {
         WebDriverManager.chromedriver().setup();
         
@@ -50,37 +50,14 @@ public class CheckoutProcess {
         FirstName = userData.get(0).get(2);
         LastName = userData.get(0).get(3);
         ZipCode = userData.get(0).get(4);
-    }
+    } 
+   
 
-    @BeforeMethod
-    public void setupTest() {
-        
-        ChromeOptions options = new ChromeOptions();
-        options.addArguments("--incognito");
-        driver = new ChromeDriver(options);
-        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(50));
-        driver.get("https://www.saucedemo.com/");
-        landingPage = new LandingPage(driver); // Initialize Page Object
-    }
-
-    @AfterMethod
-    public void tearDown() {
-        if (driver != null) {
-            driver.quit();
-        }
-    }
-    
-  
-    
-  
-    // Acccesspage & Display all Element in CheckOutPage
-    
-    
-    
   
     @Test
     public void VerifyDisplayYourInfoPage()
     {
+    	  LandingPage landingPage = new LandingPage(driver);
     	 ProductCatalogue productCatalogue = landingPage.loginApplication(username, password);
         productCatalogue.CheckAddtoCart();
          CartPageObject cartpageobject = productCatalogue.goToCartpage();
@@ -92,12 +69,12 @@ public class CheckoutProcess {
          Assert.assertTrue(driver.findElement(By.id("postal-code")).isDisplayed(), "Error: Postal Code is required");
      }
     
-    //Cancel button
     
     @Test 
     
     public void  VerifyCancelButton()
     {
+    	  LandingPage landingPage = new LandingPage(driver);
     	 ProductCatalogue productCatalogue = landingPage.loginApplication(username, password);
     	    productCatalogue.CheckAddtoCart();
     	    CartPageObject cartPage = productCatalogue.goToCartpage();
@@ -109,6 +86,7 @@ public class CheckoutProcess {
     //
     @Test
     public void verifyFirstNameBlank() {
+    	  LandingPage landingPage = new LandingPage(driver);
     	ProductCatalogue productCatalogue = landingPage.loginApplication(username, password);
 	    productCatalogue.CheckAddtoCart();
 	    CartPageObject cartPage = productCatalogue.goToCartpage();
@@ -121,6 +99,7 @@ public class CheckoutProcess {
     @Test
     public void verifyLastNameBlank() {
     	
+    	  LandingPage landingPage = new LandingPage(driver);
     	ProductCatalogue productCatalogue = landingPage.loginApplication(username, password);
 	    productCatalogue.CheckAddtoCart();
 	    CartPageObject cartPage = productCatalogue.goToCartpage();
@@ -132,6 +111,7 @@ public class CheckoutProcess {
 
     @Test
     public void verifyZipBlank() {
+    	  LandingPage landingPage = new LandingPage(driver);
     	ProductCatalogue productCatalogue = landingPage.loginApplication(username, password);
 	    productCatalogue.CheckAddtoCart();
 	    CartPageObject cartPage = productCatalogue.goToCartpage();
@@ -143,6 +123,7 @@ public class CheckoutProcess {
 
     @Test
     public void verifyOnlyFirstNameEntered() {
+    	  LandingPage landingPage = new LandingPage(driver);
         ProductCatalogue productCatalogue = landingPage.loginApplication(username, password);
 	    productCatalogue.CheckAddtoCart();
 	    CartPageObject cartPage = productCatalogue.goToCartpage();
@@ -154,6 +135,7 @@ public class CheckoutProcess {
 
     @Test
     public void verifyOnlyLastNameEntered() {
+    	  LandingPage landingPage = new LandingPage(driver);
     	ProductCatalogue productCatalogue = landingPage.loginApplication(username, password);
 	    productCatalogue.CheckAddtoCart();
 	    CartPageObject cartPage = productCatalogue.goToCartpage();
@@ -165,6 +147,7 @@ public class CheckoutProcess {
 
     @Test
     public void verifyOnlyZipEntered() {
+    	  LandingPage landingPage = new LandingPage(driver);
     	ProductCatalogue productCatalogue = landingPage.loginApplication(username, password);
 	    productCatalogue.CheckAddtoCart();
 	    CartPageObject cartPage = productCatalogue.goToCartpage();
@@ -176,6 +159,7 @@ public class CheckoutProcess {
 
     @Test
     public void verifyAllFieldsFilled() {
+    	  LandingPage landingPage = new LandingPage(driver);
     	ProductCatalogue productCatalogue = landingPage.loginApplication(username, password);
 	    productCatalogue.CheckAddtoCart();
 	    CartPageObject cartPage = productCatalogue.goToCartpage();
@@ -183,7 +167,7 @@ public class CheckoutProcess {
         checkoutPage.enterCheckoutInfo("Alexandra", "Hilario", "3016");
         checkoutPage.clickContinue();
         Assert.assertTrue(driver.getCurrentUrl().contains("checkout-step-two.html"), "Did not proceed to next checkout step.");
-    }
+    } 
     
     
 

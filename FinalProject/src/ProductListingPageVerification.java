@@ -9,6 +9,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 import org.testng.annotations.*;
 
+import BaseTest.BaseTest;
 import Excel.DataDriven;
 import PageObject.ProductList;
 import PageObject.LandingPage;
@@ -19,17 +20,15 @@ import java.io.IOException;
 import java.time.Duration;
 import java.util.ArrayList;
 
-public class ProductListingPageVerification {
+public class ProductListingPageVerification extends BaseTest {
 
 
 	String productName = "Sauce Labs Backpack";
-	ProductList productlist;
-    
-	private WebDriver driver;
+	
+
     private DataDriven d;
     private String username;
     private String password;
-    private String lockedusername;
     private ArrayList<ArrayList<String>> userData;
     private LandingPage landingPage;
 
@@ -41,26 +40,8 @@ public class ProductListingPageVerification {
         userData = d.getData();
         username = userData.get(0).get(0);
         password = userData.get(0).get(1);
-        lockedusername = userData.get(1).get(0);
     }
 
-    @BeforeMethod
-    public void setupTest() {
-        
-        ChromeOptions options = new ChromeOptions();
-        options.addArguments("--incognito");
-        driver = new ChromeDriver(options);
-        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(50));
-        driver.get("https://www.saucedemo.com/");
-        landingPage = new LandingPage(driver); // Initialize Page Object
-    }
-
-    @AfterMethod
-    public void tearDown() {
-        if (driver != null) {
-            driver.quit();
-        }
-    }
     
    
     // adding item to cart 
@@ -68,6 +49,7 @@ public class ProductListingPageVerification {
     @Test
     public void AddtoCart () throws InterruptedException
     {
+    	  LandingPage landingPage = new LandingPage(driver);
     	 ProductCatalogue productCatalogue =landingPage.loginApplication(username, password);
     	 productCatalogue.CheckAddtoCart();
     	 
@@ -87,6 +69,7 @@ public class ProductListingPageVerification {
     //sorting option
     @Test
     public void verifySortingByNameDesc() {
+    	  LandingPage landingPage = new LandingPage(driver);
     	 ProductCatalogue productCatalogue =landingPage.loginApplication(username, password);
     	 productCatalogue.sortProductsByNameZtoA();
         Assert.assertTrue(productCatalogue.isProductsSortedByNameDesc(), "Products are not sorted by name Z to A.");
@@ -95,6 +78,7 @@ public class ProductListingPageVerification {
     
     @Test
     public void verifySortingByNameAsc() {
+    	  LandingPage landingPage = new LandingPage(driver);
         // This assumes A to Z sorting is default. If not, select it:
     	 ProductCatalogue productCatalogue =landingPage.loginApplication(username, password);
         productCatalogue.sortProductsByNameAtoZ();
@@ -103,6 +87,7 @@ public class ProductListingPageVerification {
 
     @Test
     public void verifyProductSortingByPriceLowToHigh() {
+    	  LandingPage landingPage = new LandingPage(driver);
     	 ProductCatalogue productCatalogue =landingPage.loginApplication(username, password);
     	productCatalogue.sortProductsByPriceLowToHigh();
         Assert.assertTrue(productCatalogue.isProductsSortedByPriceLowToHigh(), "Products not sorted by price (low to high).");
@@ -110,6 +95,7 @@ public class ProductListingPageVerification {
     
     @Test
     public void verifySortingByPriceHighToLow() {
+    	  LandingPage landingPage = new LandingPage(driver);
     	 ProductCatalogue productCatalogue =landingPage.loginApplication(username, password);
     	 productCatalogue.sortProductsByPriceHighToLow();
         Assert.assertTrue(productCatalogue.isProductsSortedByPriceHighToLow(), "Products not sorted by price (high to low).");
@@ -118,6 +104,7 @@ public class ProductListingPageVerification {
     @Test
     public void verifyAllElementsDisplayed ()
     {
+    	  LandingPage landingPage = new LandingPage(driver);
     	ProductCatalogue productCatalogue =landingPage.loginApplication(username, password);
     	productCatalogue.CheckProductFeatures();
     	

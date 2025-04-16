@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testng-results ignored="0" total="2" passed="2" failed="0" skipped="0">
+  <reporter-output>
+  </reporter-output>
+  <suite started-at="2025-04-11T09:41:35 PST" name="Default suite" finished-at="2025-04-11T09:41:47 PST" duration-ms="11856">
+    <groups>
+    </groups>
+    <test started-at="2025-04-11T09:41:35 PST" name="Default test" finished-at="2025-04-11T09:41:47 PST" duration-ms="11856">
+      <class name="CompleteOrder">
+        <test-method is-config="true" signature="setUp()[pri:0, instance:CompleteOrder@235a0c16]" started-at="2025-04-11T09:41:35 PST" name="setUp" finished-at="2025-04-11T09:41:37 PST" duration-ms="1224" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- setUp -->
+        <test-method is-config="true" signature="launchApplication()[pri:0, instance:CompleteOrder@235a0c16]" started-at="2025-04-11T09:41:37 PST" name="launchApplication" finished-at="2025-04-11T09:41:40 PST" duration-ms="3788" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- launchApplication -->
+        <test-method signature="verifyBackHomeRedirectsToInventoryPage()[pri:0, instance:CompleteOrder@235a0c16]" started-at="2025-04-11T09:41:40 PST" name="verifyBackHomeRedirectsToInventoryPage" finished-at="2025-04-11T09:41:42 PST" duration-ms="1461" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- verifyBackHomeRedirectsToInventoryPage -->
+        <test-method is-config="true" signature="tearDown()[pri:0, instance:CompleteOrder@235a0c16]" started-at="2025-04-11T09:41:42 PST" name="tearDown" finished-at="2025-04-11T09:41:42 PST" duration-ms="364" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- tearDown -->
+        <test-method is-config="true" signature="launchApplication()[pri:0, instance:CompleteOrder@235a0c16]" started-at="2025-04-11T09:41:42 PST" name="launchApplication" finished-at="2025-04-11T09:41:46 PST" duration-ms="3401" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- launchApplication -->
+        <test-method signature="verifyThankYouMessageAndBackHomeDisplayed()[pri:0, instance:CompleteOrder@235a0c16]" started-at="2025-04-11T09:41:46 PST" name="verifyThankYouMessageAndBackHomeDisplayed" finished-at="2025-04-11T09:41:47 PST" duration-ms="1224" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- verifyThankYouMessageAndBackHomeDisplayed -->
+        <test-method is-config="true" signature="tearDown()[pri:0, instance:CompleteOrder@235a0c16]" started-at="2025-04-11T09:41:47 PST" name="tearDown" finished-at="2025-04-11T09:41:47 PST" duration-ms="334" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- tearDown -->
+      </class> <!-- CompleteOrder -->
+    </test> <!-- Default test -->
+  </suite> <!-- Default suite -->
+</testng-results>

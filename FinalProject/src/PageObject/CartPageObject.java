@@ -14,26 +14,21 @@ import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-public class CartPageObject {
+import abstractcomponents.AbstractComponent;
+
+public class CartPageObject extends AbstractComponent {
 
     WebDriver driver;
     WebDriverWait wait;
 
     
     ////Locators
-    @FindBy(className = "shopping_cart_link")
-    private WebElement cartIcon;
-
-    @FindBy(className = "shopping_cart_badge")
-    private WebElement cartItemCount;
 
     @FindBy(id = "react-burger-menu-btn")
     private WebElement hamburgerMenu;
     
     @FindBy(xpath = "//button[contains(text(),'Add to cart')]")
     public List<WebElement> addToCartButtons;
-    
-    
     
     //////
     @FindBy(className = "cart_quantity")
@@ -66,7 +61,7 @@ public class CartPageObject {
     List <WebElement> productDesc;
     
 
-    // Find all "Remove" buttons on the cart page (or product page)
+    // Find all "Remove" buttons on the cart page (or product page) //8
     @FindBy(xpath = "//button[contains(text(),'Remove')]")
     List<WebElement> removeButtons;
     
@@ -79,11 +74,12 @@ public class CartPageObject {
 
     // Constructor
     public CartPageObject(WebDriver driver) {
+    	super(driver);
         this.driver = driver;
         this.wait = new WebDriverWait(driver, Duration.ofSeconds(15)); // Increased timeout duration to 15 seconds
         PageFactory.initElements(driver, this);  // Initialize elements
     }
-
+    
     // Method to open the hamburger menu
     public void openHamburgerMenu() {
         try {
@@ -103,13 +99,14 @@ public class CartPageObject {
             System.out.println("Close button for hamburger menu not found!");
         }
     }
-
     
+   
+ // Waits until all elements in the list become visible within the specified timeout
     public void waitWebElementToAppear(List<WebElement> elements) {
 	    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
 	    wait.until(ExpectedConditions.visibilityOfAllElements(elements));
 	}
-	
+ // Waits until all elements in the list become invisible within the specified timeout
 	public void waitWebElementToDisappear(List<WebElement> elements) {
 	    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
 	    wait.until(ExpectedConditions.invisibilityOfAllElements(elements));
@@ -133,42 +130,27 @@ public class CartPageObject {
  	  return hamburgerMenu.isDisplayed();
     
  	}
-    ///////
-    ///cartpage
     
+    
+    
+    ///CartPage
     public boolean areMultipleProductsInCart() {
         return cartItems.size() > 1; // If more than one cart item exists, return true
     }
     
- // ✅ 6. Verify if product details are correct
+    // Verify if product details are correct
     public boolean areProductDetailsCorrect() {
         return cartItems.size() > 0 && !cartQuantities.isEmpty() && !products.isEmpty();
     }
 
-    // ✅ 7. Remove an item from the cart
-    public void removeItemFromCartPage() {
-        if (!removeButtons.isEmpty()) {
-            removeButtons.get(0).click();  // Removes the first item in the cart
-        }
-    }
-
-    // ✅ 8. Check if cart count updated
-    public boolean isCartCountUpdated(int expectedCount) {
-        try {
-            return Integer.parseInt(cartItemCount.getText()) == expectedCount;
-        } catch (NoSuchElementException e) {
-            return expectedCount == 0; // If count is 0, element may not be visible
-        }
-    }
-
-    // ✅ 9. Remove all items from cart
+    	// Remove all items from cart
     public void removeAllItemsFromCart() {
         for (WebElement removeButton : removeButtons) {
             removeButton.click();
         }
     }
-
-    // ✅ 10. Verify if cart is empty
+//*
+    // Verify if cart is empty
     public boolean isCartEmpty() {
         return cartItems.isEmpty();
     }
@@ -200,16 +182,8 @@ public class CartPageObject {
             return false;
             
         }
+       
         
-            public CartPageObject VerifyCartpage() {
-       // Example of navigating to the cart page
-       WebElement cartIcon = driver.findElement(By.className("shopping_cart_link"));
-       cartIcon.click();  // Click the cart icon to go to the cart page
-
-       // Return an instance of CartPageObject after navigating to the cart page
-       return new CartPageObject(driver);
-
-            }
             // Continue to check outpage
        public CheckOutPageObject  goTocheckout() {
    		checkoutButton.click();
@@ -223,7 +197,6 @@ public class CartPageObject {
    		return checkoutOverview;
    	}
        
-     
         
     }
 
@@ -233,39 +206,5 @@ public class CartPageObject {
   
   
 
-     // Method to get hamburger menu options as a list of strings
-  /*  public List<String> getHamburgerMenuOptions() {
-        try {
-            wait.until(ExpectedConditions.visibilityOfElementLocated(By.className("bm-menu-wrap"))); 
-            List<WebElement> menuItems = getHamburgerMenuElements();
-            waitWebElementListAppear(menuItems); 
-
-            return menuItems.stream()
-                    .map(WebElement::getText)
-                    .collect(Collectors.toList());
-        } catch (TimeoutException e) {
-            System.out.println("Menu options did not appear in time!");
-            return List.of();
-        }
-    }
-
-    // Helper method to wait for a list of elements to appear
-    public void waitWebElementListAppear(List<WebElement> elements) {
-        try {
-            wait.until(ExpectedConditions.visibilityOfAllElements(elements));
-        } catch (StaleElementReferenceException e) {
-            System.out.println("Elements were not stable. Retrying...");
-            wait.until(ExpectedConditions.refreshed(ExpectedConditions.visibilityOfAllElements(elements)));
-        }
-    }
-
-    // Helper method to check if an element is displayed
-    private boolean isElementDisplayed(By locator) {
-        try {
-            wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
-            return driver.findElement(locator).isDisplayed();
-        } catch (TimeoutException e) {
-            return false;
-        } */
-    
+  
 

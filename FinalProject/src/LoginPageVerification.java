@@ -12,13 +12,14 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
+import BaseTest.BaseTest;
 import Excel.DataDriven;
 import PageObject.LandingPage;
 import io.github.bonigarcia.wdm.WebDriverManager;
 
-public class LoginPageVerification {
+public class LoginPageVerification extends BaseTest {
     
-    private WebDriver driver;
     private DataDriven d;
     private String username;
     private String password;
@@ -36,20 +37,7 @@ public class LoginPageVerification {
         lockedusername = userData.get(1).get(0);
     }
 
-    @BeforeMethod
-    public void setupTest() {
-        driver = new ChromeDriver();
-        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(50));
-        driver.get("https://www.saucedemo.com/");
-        landingPage = new LandingPage(driver); // Initialize Page Object
-    }
-
-    @AfterMethod
-    public void tearDown() {
-        if (driver != null) {
-            driver.quit();
-        }
-    }
+   
 
     @Test
     public void verifyLoginPageElements() {
@@ -62,31 +50,33 @@ public class LoginPageVerification {
 
     @Test
     public void verifyInvalidPasswordLogin() {
+    	LandingPage landingPage = new LandingPage(driver);
         landingPage.loginApplication(username, "wrong_password");
         WebElement errorMessage = driver.findElement(By.xpath("//h3[@data-test='error']"));
         Assert.assertTrue(errorMessage.isDisplayed(), "Error message not displayed for incorrect password");
     }
 
+    
     @Test
     public void verifyInvalidUsernameLogin() {
-        landingPage.loginApplication("wrong_username", password);
+    	LandingPage landingPage = new LandingPage(driver);
+    	landingPage.loginApplication("wrong_username", password);
         WebElement errorMessage = driver.findElement(By.xpath("//h3[@data-test='error']"));
         Assert.assertTrue(errorMessage.isDisplayed(), "Error message not displayed for incorrect username");
     }
 
     @Test
     public void verifyEmptyUsernameLogin() {
-        driver.findElement(By.id("password")).sendKeys(password);
-        driver.findElement(By.id("login-button")).click();
+    	LandingPage landingPage = new LandingPage(driver);
+    	landingPage.loginApplication(" ", password);
         WebElement errorMessage = driver.findElement(By.xpath("//h3[@data-test='error']"));
         Assert.assertTrue(errorMessage.isDisplayed(), "Error message not displayed for empty username");
     }
     
     @Test
     public void verifyEmptyFilled() {
-        driver.findElement(By.id("password")).sendKeys("");
-        driver.findElement(By.id("user-name")).sendKeys("");
-        driver.findElement(By.id("login-button")).click();
+    	LandingPage landingPage = new LandingPage(driver);
+    	landingPage.loginApplication("", "");
         WebElement errorMessage = driver.findElement(By.xpath("//h3[@data-test='error']"));
         Assert.assertTrue(errorMessage.isDisplayed(), "Error message not displayed for empty username");
     }
@@ -94,20 +84,22 @@ public class LoginPageVerification {
 
     @Test
     public void verifyEmptyPasswordLogin() {
-        driver.findElement(By.id("user-name")).sendKeys(username);
-        driver.findElement(By.id("login-button")).click();
+    	LandingPage landingPage = new LandingPage(driver);
+    	landingPage.loginApplication(username, " ");
         WebElement errorMessage = driver.findElement(By.xpath("//h3[@data-test='error']"));
         Assert.assertTrue(errorMessage.isDisplayed(), "Error message not displayed for empty password");
     }
 
     @Test
     public void verifySuccessfulStandardUserLogin() {
+    	LandingPage landingPage = new LandingPage(driver);
         landingPage.loginApplication(username, password);
         Assert.assertTrue(driver.getCurrentUrl().contains("inventory.html"), "Login Failed: Inventory page not loaded.");
     }
 
     @Test
     public void verifyLockedOutUserLogin() {
+    	LandingPage landingPage = new LandingPage(driver);
         landingPage.loginApplication(lockedusername, password);
         WebElement errorMessage = driver.findElement(By.xpath("//h3[@data-test='error']"));
         Assert.assertTrue(errorMessage.getText().contains("locked out"), "Error message for locked-out user not displayed");

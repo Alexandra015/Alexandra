@@ -5,9 +5,11 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
+import abstractcomponents.AbstractComponent;
+
 import java.util.List;
 
-public class ProductList {
+public class ProductList extends AbstractComponent{
 
 	    WebDriver driver;
 
@@ -31,9 +33,18 @@ public class ProductList {
 	    
 
 	    public ProductList(WebDriver driver) {
+	    	super(driver);
 	        this.driver = driver;
 	        PageFactory.initElements(driver, this);
+	        
 	    }
+	    
+	    public void  goTo()
+		{
+			driver.get("https://www.saucedemo.com");
+			
+			
+		}
 
 	    public List<WebElement> getProductList() {
 	        return productList;
